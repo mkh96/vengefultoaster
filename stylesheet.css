@@ -1,0 +1,22 @@
+#title {
+	color: #A161E1;
+	font-family: "Open Sans";
+	font-weight: bold;
+	size: 75px;
+	border-style: solid;
+	border-color: black;
+	border-width: 100px;
+	background-color: black;
+	
+}
+
+#button1 {
+	color: #F516B9;
+	font-family: "Open Sans";
+	font-size: 25px;
+	border-style: solid;
+	border-color: black;
+	border-radius: 5px;
+	background-color: black;
+	
+}
