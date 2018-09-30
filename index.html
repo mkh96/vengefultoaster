@@ -4,12 +4,72 @@
 <link rel="stylesheet" href="stylesheet.css">	
 	<p id="title">Welcome to the friendship checker!</p>
 	<script src="javascript.js"></script>
+	
+
+	<!--WIDGET STUFF-->
+	<script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.9.0/js/okta-sign-in.
+min.js" type="text/javascript"></script>
+  <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.9.0/css/okta-sign-in.
+min.css" type="text/css" rel="stylesheet"/>
+  <link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.9.0/css/okta-theme.cs
+s" type="text/css" rel="stylesheet"/>
+	
 </head>
 <body style="font-size:32px">
 	<input id= "button1" type="button" value="Click to see if we're friends" onclick="friendshipcheck()"/>
 	
+	<div id="sign-in-container"></div>
 	
 	
+	<!--AUTHENTICATION STUFF-->
+<script type="text/javascript">
+  var oktaSignIn = new OktaSignIn({
+    baseUrl: "{{ https://vengefultoaster.herokuapp.com/ }}",
+    clientId: "{{ 0oagf764qunFM7SwI0h7 }}",
+    authParams: {
+      issuer: "{{ https://vengefultoaster.herokuapp.com/ }}/oauth2/default",
+      responseType: ["token", "id_token"],
+      display: "page"
+    }
+  });
+
+  if (oktaSignIn.token.hasTokensInUrl()) {
+    oktaSignIn.token.parseTokensFromUrl(
+      // If we get here, the user just logged in.
+      function success(res) {
+        var accessToken = res[0];
+        var idToken = res[1]
+
+        oktaSignIn.tokenManager.add("accessToken", accessToken);
+        oktaSignIn.tokenManager.add("idToken", idToken);
+
+        window.location.hash = "";
+        document.getElementById("messageBox").innerHTML = "Hello, " + idToken.claims.email + "! You just logged in! :)";
+      },
+      function error(err) {
+        console.error(err);
+      }
+    );
+  } else {
+    oktaSignIn.session.get(function (res) {
+      // If we get here, the user is already signed in.
+      if (res.status === 'ACTIVE') {
+        document.getElementById("messageBox").innerHTML = "Hello, " + res.login + "! You are *still* logged in! :)";
+        return;
+      }
+
+      // If we get here, the user is not logged in, so we should show the sign-in form.
+      oktaSignIn.renderEl(
+        { el: '#sign-in-container' },
+        function success(res) {},
+        function error(err) {
+          console.error(err);
+        }
+      );
+    });
+  }
+</script>
+
 	
 </body>
 </html>
